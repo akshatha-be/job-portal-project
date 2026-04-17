@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Browse Jobs — JobVerse{% endblock %}
+{% block content %}
+<div class="page-header py-4">
+  <div class="container">
+    <h2 class="fw-bold mb-1">Browse Jobs</h2>
+    <p class="text-muted mb-0">{{ jobs|length }} result{{ jobs|length|pluralize }} found</p>
+  </div>
+</div>
+
+<div class="container py-4">
+  <!-- FILTER FORM -->
+  <div class="filter-card mb-4">
+    <form method="GET" action="{% url 'search_jobs' %}">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Job Title</label>
+          <input type="text" name="title" value="{{ title }}" class="form-control" placeholder="Search title...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Location</label>
+          <input type="text" name="location" value="{{ location }}" class="form-control" placeholder="City...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Category</label>
+          <select name="category" class="form-select">
+            <option value="">All Categories</option>
+            {% for val, lbl in categories %}
+            <option value="{{ val }}" {% if category == val %}selected{% endif %}>{{ lbl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Job Type</label>
+          <select name="job_type" class="form-select">
+            <option value="">All Types</option>
+            {% for val, lbl in job_types %}
+            <option value="{{ val }}" {% if job_type == val %}selected{% endif %}>{{ lbl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Company</label>
+          <input type="text" name="company" value="{{ company }}" class="form-control" placeholder="Company...">
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULTS -->
+  {% if jobs %}
+  <div class="row g-4">
+    {% for job in jobs %}
+    <div class="col-md-6 col-lg-4">
+      <div class="job-card h-100">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="company-avatar">{{ job.company|first|upper }}</div>
+          <span class="badge job-type-badge">{{ job.get_job_type_display }}</span>
+        </div>
+        <h5 class="job-title fw-bold mb-1">{{ job.title }}</h5>
+        <p class="company-name mb-2"><i class="bi bi-building me-1"></i>{{ job.company }}</p>
+        <div class="job-meta mb-3">
+          <span class="meta-item"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>
+          <span class="meta-item text-success fw-semibold"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</span>
+        </div>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <span class="badge cat-badge">{{ job.get_category_display }}</span>
+          <span class="badge bg-light text-secondary">{{ job.application_count }} applied</span>
+        </div>
+        <p class="text-muted small">{{ job.description|truncatechars:90 }}</p>
+        <div class="d-flex gap-2 mt-auto pt-3">
+          <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm flex-fill">Details</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'apply_job' job.id %}" class="btn btn-primary btn-sm flex-fill">Apply</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm flex-fill">Apply</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <i class="bi bi-search display-1 text-muted"></i>
+    <h4 class="mt-3 text-muted">No jobs match your search</h4>
+    <p class="text-muted">Try adjusting your filters</p>
+    <a href="{% url 'search_jobs' %}" class="btn btn-outline-primary mt-2">Clear Filters</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

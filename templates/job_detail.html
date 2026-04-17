@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }} — JobVerse{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <!-- JOB HEADER -->
+      <div class="job-detail-card mb-4">
+        <div class="d-flex gap-4 align-items-start">
+          <div class="company-avatar-lg">{{ job.company|first|upper }}</div>
+          <div class="flex-fill">
+            <h2 class="fw-bold mb-1">{{ job.title }}</h2>
+            <p class="fs-5 text-muted mb-2"><i class="bi bi-building me-2"></i>{{ job.company }}</p>
+            <div class="d-flex flex-wrap gap-3 text-muted">
+              <span><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>
+              <span class="text-success fw-semibold"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</span>
+              <span><i class="bi bi-calendar3 me-1"></i>Posted {{ job.created_at|date:"M d, Y" }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap mt-3">
+          <span class="badge cat-badge fs-6 px-3 py-2">{{ job.get_category_display }}</span>
+          <span class="badge job-type-badge fs-6 px-3 py-2">{{ job.get_job_type_display }}</span>
+          <span class="badge bg-light text-dark fs-6 px-3 py-2">{{ job.application_count }} Applicant{{ job.application_count|pluralize }}</span>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="job-detail-card mb-4">
+        <h4 class="fw-bold mb-3"><i class="bi bi-file-text me-2 text-primary"></i>Job Description</h4>
+        <div class="job-description">{{ job.description|linebreaks }}</div>
+      </div>
+
+      <a href="{% url 'search_jobs' %}" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left me-1"></i>Back to Jobs
+      </a>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="col-lg-4">
+      <div class="job-detail-card sticky-top" style="top: 80px;">
+        <h5 class="fw-bold mb-4">Apply for this Position</h5>
+        {% if user.is_authenticated %}
+          {% if already_applied %}
+            <div class="alert alert-success">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              You've already applied for this job!
+            </div>
+            <a href="{% url 'seeker_dashboard' %}" class="btn btn-outline-primary w-100">View My Applications</a>
+          {% else %}
+            <a href="{% url 'apply_job' job.id %}" class="btn btn-primary w-100 btn-lg fw-semibold">
+              <i class="bi bi-send-fill me-2"></i>Apply Now
+            </a>
+          {% endif %}
+        {% else %}
+          <p class="text-muted small mb-3">Please log in to apply for this job.</p>
+          <a href="{% url 'login' %}" class="btn btn-primary w-100 btn-lg fw-semibold">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login to Apply
+          </a>
+          <a href="{% url 'register' %}" class="btn btn-outline-primary w-100 mt-2">Create Account</a>
+        {% endif %}
+
+        <hr class="my-4">
+        <h6 class="fw-bold mb-3">Job Overview</h6>
+        <div class="overview-list">
+          <div class="overview-item"><i class="bi bi-geo-alt-fill text-primary"></i><span>{{ job.location }}</span></div>
+          <div class="overview-item"><i class="bi bi-cash-stack text-success"></i><span>{{ job.salary }}</span></div>
+          <div class="overview-item"><i class="bi bi-briefcase-fill text-primary"></i><span>{{ job.get_job_type_display }}</span></div>
+          <div class="overview-item"><i class="bi bi-tag-fill text-warning"></i><span>{{ job.get_category_display }}</span></div>
+          <div class="overview-item"><i class="bi bi-building text-primary"></i><span>{{ job.company }}</span></div>
+          <div class="overview-item"><i class="bi bi-people-fill text-primary"></i><span>{{ job.application_count }} applied</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

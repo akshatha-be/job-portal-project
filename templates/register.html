@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Register — JobVerse{% endblock %}
+{% block content %}
+<div class="auth-page py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="auth-card">
+          <div class="auth-header text-center mb-4">
+            <div class="auth-icon mb-3"><i class="bi bi-person-plus-fill"></i></div>
+            <h2 class="fw-bold">Create Account</h2>
+            <p class="text-muted">Join thousands of professionals on JobVerse</p>
+          </div>
+
+          <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">I am a...</label>
+              <div class="role-selector d-flex gap-3">
+                <label class="role-option flex-fill">
+                  <input type="radio" name="role" value="job_seeker" checked class="d-none role-radio">
+                  <div class="role-box text-center p-3">
+                    <i class="bi bi-person-circle fs-3 d-block mb-1"></i>
+                    <span class="fw-semibold">Job Seeker</span>
+                    <small class="d-block text-muted">Find Jobs</small>
+                  </div>
+                </label>
+                <label class="role-option flex-fill">
+                  <input type="radio" name="role" value="employer" class="d-none role-radio">
+                  <div class="role-box text-center p-3">
+                    <i class="bi bi-building fs-3 d-block mb-1"></i>
+                    <span class="fw-semibold">Employer</span>
+                    <small class="d-block text-muted">Post Jobs</small>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Username</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" name="password" class="form-control" placeholder="Create a password" required>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Confirm Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Repeat your password" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg fw-semibold">Create Account</button>
+          </form>
+
+          <p class="text-center mt-4 text-muted">Already have an account? <a href="{% url 'login' %}" class="fw-semibold">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.role-radio').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.role-box').forEach(b => b.classList.remove('selected'));
+    radio.closest('.role-option').querySelector('.role-box').classList.add('selected');
+  });
+});
+document.querySelector('.role-radio:checked').closest('.role-option').querySelector('.role-box').classList.add('selected');
+</script>
+{% endblock %}

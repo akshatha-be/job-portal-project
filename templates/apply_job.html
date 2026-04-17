@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Apply — {{ job.title }} — JobVerse{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="auth-card">
+        <div class="mb-4">
+          <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left me-1"></i>Back
+          </a>
+          <h3 class="fw-bold">Apply for Position</h3>
+          <div class="apply-job-header mt-3">
+            <h5 class="text-primary mb-1">{{ job.title }}</h5>
+            <p class="text-muted mb-0"><i class="bi bi-building me-1"></i>{{ job.company }} &nbsp;·&nbsp; <i class="bi bi-geo-alt me-1"></i>{{ job.location }}</p>
+          </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Resume / CV <span class="text-danger">*</span></label>
+            <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx" required>
+            <div class="form-text">Accepted: PDF, DOC, DOCX</div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Cover Letter <span class="text-muted fw-normal">(optional)</span></label>
+            <textarea name="cover_letter" class="form-control" rows="6"
+              placeholder="Tell the employer why you're a great fit for this role..."></textarea>
+          </div>
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-lg fw-semibold flex-fill">
+              <i class="bi bi-send-fill me-2"></i>Submit Application
+            </button>
+            <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

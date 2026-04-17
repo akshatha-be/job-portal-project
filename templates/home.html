@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}JobVerse — Find Your Dream Job{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-overlay">
+    <div class="container text-center hero-content">
+      <span class="badge bg-warning text-dark mb-3 px-3 py-2 fw-semibold">🚀 {{ total_jobs }}+ Jobs Available</span>
+      <h1 class="hero-title">Find Your <span class="text-warning">Dream Job</span></h1>
+      <p class="hero-subtitle">Explore opportunities from top companies across all industries</p>
+
+      <!-- SEARCH FORM -->
+      <div class="hero-search-box">
+        <form method="GET" action="{% url 'search_jobs' %}" class="d-flex flex-wrap justify-content-center gap-2">
+          <input type="text" name="title" placeholder="🔍  Job title, keyword..." class="hero-input">
+          <input type="text" name="location" placeholder="📍  City, state or remote..." class="hero-input">
+          <select name="category" class="hero-input hero-select">
+            <option value="">All Categories</option>
+            <option value="technology">Technology</option>
+            <option value="finance">Finance</option>
+            <option value="marketing">Marketing</option>
+            <option value="design">Design</option>
+            <option value="sales">Sales</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="education">Education</option>
+            <option value="engineering">Engineering</option>
+            <option value="other">Other</option>
+          </select>
+          <button type="submit" class="btn btn-warning btn-lg fw-bold px-4">Search Jobs</button>
+        </form>
+      </div>
+
+      {% if not user.is_authenticated %}
+      <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{% url 'register' %}" class="btn btn-light btn-lg px-4 fw-semibold">Get Started Free</a>
+        <a href="{% url 'search_jobs' %}" class="btn btn-outline-light btn-lg px-4">Browse All Jobs</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="stats-strip py-4">
+  <div class="container">
+    <div class="row text-center g-3">
+      <div class="col-4">
+        <div class="stat-item">
+          <h3 class="fw-bold text-warning mb-0">{{ total_jobs }}+</h3>
+          <small class="text-muted">Active Jobs</small>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="stat-item">
+          <h3 class="fw-bold text-warning mb-0">{{ total_companies }}+</h3>
+          <small class="text-muted">Companies</small>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="stat-item">
+          <h3 class="fw-bold text-warning mb-0">{{ total_users }}+</h3>
+          <small class="text-muted">Users</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST JOBS -->
+<section class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Latest Job Openings</h2>
+      <p class="text-muted mb-0">Hand-picked opportunities from top employers</p>
+    </div>
+    <a href="{% url 'search_jobs' %}" class="btn btn-outline-primary">View All Jobs <i class="bi bi-arrow-right ms-1"></i></a>
+  </div>
+
+  {% if jobs %}
+  <div class="row g-4">
+    {% for job in jobs %}
+    <div class="col-md-6 col-lg-4">
+      <div class="job-card h-100">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="company-avatar">{{ job.company|first|upper }}</div>
+          <span class="badge job-type-badge">{{ job.get_job_type_display }}</span>
+        </div>
+        <h5 class="job-title fw-bold mb-1">{{ job.title }}</h5>
+        <p class="company-name mb-2"><i class="bi bi-building me-1"></i>{{ job.company }}</p>
+        <div class="job-meta mb-3">
+          <span class="meta-item"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>
+          <span class="meta-item text-success fw-semibold"><i class="bi bi-currency-dollar me-1"></i>{{ job.salary }}</span>
+        </div>
+        <span class="badge cat-badge mb-3">{{ job.get_category_display }}</span>
+        <p class="job-desc text-muted small">{{ job.description|truncatechars:100 }}</p>
+        <div class="d-flex gap-2 mt-auto pt-3">
+          <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm flex-fill">View Details</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'apply_job' job.id %}" class="btn btn-primary btn-sm flex-fill">Apply Now</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm flex-fill">Apply Now</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <i class="bi bi-briefcase display-1 text-muted"></i>
+    <h4 class="mt-3 text-muted">No jobs posted yet</h4>
+    <a href="{% url 'post_job' %}" class="btn btn-primary mt-2">Post the First Job</a>
+  </div>
+  {% endif %}
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories-section py-5">
+  <div class="container">
+    <h2 class="fw-bold text-center mb-2">Browse by Category</h2>
+    <p class="text-center text-muted mb-5">Find jobs in your area of expertise</p>
+    <div class="row g-3 justify-content-center">
+      {% for value, label in categories_list %}
+      <div class="col-6 col-md-3 col-lg-2">
+        <a href="{% url 'search_jobs' %}?category={{ value }}" class="category-card text-decoration-none">
+          <div class="text-center py-3 px-2">
+            <div class="cat-icon mb-2">
+              {% if value == 'technology' %}💻
+              {% elif value == 'finance' %}💰
+              {% elif value == 'marketing' %}📢
+              {% elif value == 'design' %}🎨
+              {% elif value == 'sales' %}📈
+              {% elif value == 'healthcare' %}🏥
+              {% elif value == 'education' %}📚
+              {% elif value == 'engineering' %}⚙️
+              {% else %}🌐{% endif %}
+            </div>
+            <span class="fw-semibold small">{{ label }}</span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section py-5 my-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">Are You Hiring?</h2>
+    <p class="lead mb-4 opacity-75">Post your job opening and reach thousands of qualified candidates</p>
+    <a href="{% url 'post_job' %}" class="btn btn-warning btn-lg fw-bold px-5">Post a Job Now</a>
+  </div>
+</section>
+
+{% endblock %}

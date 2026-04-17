@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}About — JobVerse{% endblock %}
+{% block content %}
+<div class="page-header py-5 text-center">
+  <div class="container">
+    <h1 class="fw-bold mb-3">About <span class="text-warning">JobVerse</span></h1>
+    <p class="lead text-muted col-md-8 mx-auto">We connect talented professionals with the companies that need them most. Built for modern job seekers and forward-thinking employers.</p>
+  </div>
+</div>
+<div class="container py-5">
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="about-card text-center p-4">
+        <div class="about-icon mb-3"><i class="bi bi-search-heart text-primary fs-1"></i></div>
+        <h5 class="fw-bold">Smart Job Search</h5>
+        <p class="text-muted small">Filter by title, location, category, and type to find your perfect match in seconds.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="about-card text-center p-4">
+        <div class="about-icon mb-3"><i class="bi bi-shield-check text-success fs-1"></i></div>
+        <h5 class="fw-bold">Trusted by Employers</h5>
+        <p class="text-muted small">Employers can easily post listings, manage applications, and track hiring progress.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="about-card text-center p-4">
+        <div class="about-icon mb-3"><i class="bi bi-lightning-charge text-warning fs-1"></i></div>
+        <h5 class="fw-bold">One-Click Apply</h5>
+        <p class="text-muted small">Upload your resume and cover letter, and apply to multiple jobs effortlessly.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center g-5">
+    <div class="col-md-6">
+      <h2 class="fw-bold mb-4">Our Mission</h2>
+      <p class="text-muted">JobVerse was built to make job searching and hiring as simple, transparent, and efficient as possible. Whether you're a fresh graduate or an experienced professional, we have opportunities for you.</p>
+      <p class="text-muted">For employers, our platform provides easy tools to post, manage, and review applicants — all in one dashboard.</p>
+      <a href="{% url 'register' %}" class="btn btn-primary mt-3 px-4">Join JobVerse Today</a>
+    </div>
+    <div class="col-md-6">
+      <div class="about-stats-card p-4">
+        <div class="row g-3 text-center">
+          <div class="col-6">
+            <h3 class="fw-bold text-primary">10K+</h3>
+            <small class="text-muted">Jobs Posted</small>
+          </div>
+          <div class="col-6">
+            <h3 class="fw-bold text-primary">5K+</h3>
+            <small class="text-muted">Companies</small>
+          </div>
+          <div class="col-6">
+            <h3 class="fw-bold text-primary">50K+</h3>
+            <small class="text-muted">Job Seekers</small>
+          </div>
+          <div class="col-6">
+            <h3 class="fw-bold text-primary">98%</h3>
+            <small class="text-muted">Satisfaction</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
